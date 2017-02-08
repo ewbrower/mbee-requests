@@ -1,0 +1,29 @@
+{"elements": [{
+    "siteCharacterizationId": "mbppguidex",
+    "qualifiedId": "/mbppguidex/PROJECT-c66d4ab2-0f15-44fb-b5d2-6a734cdca55c/_18_0_5_3a40149_1485980915941_705617_21664/_18_0_5_3a40149_1485980887906_116932_12274/_18_0_5_3a40149_1485980887906_983266_12278/_18_0_5_3a40149_1485980889811_366532_12332/_18_0_5_3a40149_1485980890356_620483_12386/_18_0_5_3a40149_1485980890356_620483_12386-slot-_18_0_5_3a40149_1485980891431_168067_12451",
+    "nodeRefId": "workspace://SpacesStore/a11df6b3-d58a-43f5-8386-e443f35352dc",
+    "versionedRefId": "versionStore://version2Store/d5d4f28a-3e43-4883-9ad5-d8cfbee32101",
+    "qualifiedName": "/mbppguidex/MBPP_X/MODEL/PAF_Design/PAF_Design_Fidelity1/Design_1/Instance_Middle_PAF/",
+    "sysmlid": "_18_0_5_3a40149_1485980890356_620483_12386-slot-_18_0_5_3a40149_1485980891431_168067_12451",
+    "isMetatype": false,
+    "editable": true,
+    "creator": "tmpselcuk",
+    "modified": "2017-02-01T15:40:23.367-0500",
+    "modifier": "tmpselcuk",
+    "created": "Wed Feb 01 15:38:04 EST 2017",
+    "name": "",
+    "owner": "_18_0_5_3a40149_1485980890356_620483_12386",
+    "documentation": "",
+    "read": "2017-02-07T16:19:25.963-0500",
+    "appliedMetatypes": ["_9_0_62a020a_1105704885275_885607_7905"],
+    "specialization": {
+        "propertyType": "_18_0_5_3a40149_1485980891431_168067_12451",
+        "isSlot": true,
+        "isDerived": false,
+        "value": [{
+            "type": "LiteralReal",
+            "double": 2.97133447194808E7
+        }],
+        "type": "Property"
+    }
+}]}
