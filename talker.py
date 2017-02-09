@@ -1,3 +1,4 @@
+import master
 import sys
 import json
 
@@ -29,6 +30,8 @@ class Parser(object):
 		
 
 if __name__ == '__main__':
+	m = master.Master("host","port")
+
 	print("Running on Python " + str(sys.version_info.major) 
 		+ "." + str(sys.version_info.minor))
 	reader = Reader()
