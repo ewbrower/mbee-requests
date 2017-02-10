@@ -15,19 +15,25 @@ class Master(object):
 	def connect(self):
 		print("connecting")
 
+	def getBaseURL(self):
+		return "http://" + self.host + ":" + self.port + "/alfresco/service/"
+
 class Reader(Master):
 	"""This class reads information from the port"""
 	def __init__(self, host, port):
 		super(Reader, self).__init__(host, port)
 
-	def getElementById(self, id):
-		print(id)
+	def getElementById(self, site, idd):
+		# print(idd)
 		# construct URL
 		# use requests to send it over
+		url = self.getBaseURL() + "/workspaces/master/sites/" + site + "/elements/" + idd
+		return url
 
-	def saveElementById(self, id, filename):
-		print(id)
-		print(filename)
+	def saveElementById(self, site, idd, filename):
+		url = self.getElementById(site, idd)
+		return url
+
 
 	# def readFile(self, file):
 	# 	print(file)
@@ -53,8 +59,9 @@ class Writer(Master):
 
 if __name__ == '__main__':
 	reader = Reader("host", "port")
-	reader.getElementById("1800")
-	reader.saveElementById("1800", "sample.json")
+	print("work pls")
+	print(reader.getElementById("master", "1800"))
+	print(reader.saveElementById("master", "1800", "sample.json"))
 
 	writer = Writer("host", "port")
 	writer.postElementFromFile("sample.json")
