@@ -1,27 +1,61 @@
+import requests
 import sys
 import json
+from getpass import getpass
 
-class Master(object):
-	"""This is the master class that holds the connection to the MBEE server"""
-	def __init__(self, host, port):
-		self.host = host
-		self.port = port
-		print(str(sys.version_info.major) + "." + str(sys.version_info.minor))
+class MBEESession(requests.Session):
+	"""This is a requests Session object built for connecting to MBEE"""
+
+	def __init__(self, host, port = None):
+		super(MBEESession, self).__init__()
+		print("Running with Python " + str(sys.version_info.major) 
+			+ "." + str(sys.version_info.minor) + "\n")
+		# establish the baseURL for this (don't need port all the time, always host)
+		self.baseURL = host + ":" + port if port else host
+		# store the user auth for use in the get and post functions
 		self.authenticate()
 
 	def authenticate(self):
-		print("Please enter username and password")
-
-	def connect(self):
-		print("connecting")
+		print("Please enter your username and password")
+		username = input("Username: ")
+		password = getpass("Password: ")
+		self.auth = (username, password)
 
 	def getBaseURL(self):
-		return "http://" + self.host + ":" + self.port + "/alfresco/service/"
+		return self.baseURL
 
-class Reader(Master):
-	"""This class reads information from the port"""
-	def __init__(self, host, port):
-		super(Reader, self).__init__(host, port)
+# class Master(object):
+# 	"""This is the master class that holds the connection to the MBEE server"""
+# 	def __init__(self, host, port):
+# 		self.host = host
+# 		self.port = port
+# 		print("Running with Python " + str(sys.version_info.major) 
+# 			+ "." + str(sys.version_info.minor) + "\n")
+# 		self.sesh = requests.Session()
+# 		self.sesh.auth = self.authenticate()
+# 		print("did it: " + str(self.sesh.auth))
+# 		self.connect()
+
+# 	def authenticate(self):
+# 		print("Please enter username and password")
+# 		username = input("Username: ")
+# 		password = getpass.getpass("Password: ")
+# 		return (username, password)
+
+# 	def connect(self):
+# 		print("Connecting user " + self.sesh.auth[0] + " to database.")
+
+# 	def getBaseURL(self):
+# 		return "http://" + self.host + ":" + self.port + "/alfresco/service"
+
+class Talker(MBEESession):
+	"""This is the class that combines read and write to database methods"""
+	def __init__(self, host, port= None):
+		super(Talker, self).__init__(host, port)
+
+	def help(self):
+		print("Here are the functions available:\ngetElementById(site, id)"
+			+ "\nsaveElementById(site, id, file)\npostElementFromFile(id, file)")
 
 	def getElementById(self, site, idd):
 		# print(idd)
@@ -34,37 +68,8 @@ class Reader(Master):
 		url = self.getElementById(site, idd)
 		return url
 
-
-	# def readFile(self, file):
-	# 	print(file)
-	# 	js = open(file, 'r')
-
-	# 	jsonStr = ""
-	# 	for line in js.readlines():
-	# 		jsonStr+=line.strip()
-
-	# 	return self.readString(jsonStr)
-
-	# def readString(self, jsonStr):
-	# 	data = json.loads(jsonStr)
-	# 	return data
-
-class Writer(Master):
-	"""This class sends information over to the server"""
-	def __init__(self, host, port):
-		super(Writer, self).__init__(host, port)
-
-	def postElementFromFile(self, filename):
+	def postElementFromFile(self, idd, filename):
 		print(filename)
-
-if __name__ == '__main__':
-	reader = Reader("host", "port")
-	print("work pls")
-	print(reader.getElementById("master", "1800"))
-	print(reader.saveElementById("master", "1800", "sample.json"))
-
-	writer = Writer("host", "port")
-	writer.postElementFromFile("sample.json")
 
 
 
