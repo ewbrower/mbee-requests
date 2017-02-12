@@ -1,7 +1,23 @@
 import requests
+from requests.auth import AuthBase
 import sys
 import json
 from getpass import getpass
+
+class MBEEAuth(AuthBase):
+	"""This is the authentication class for MBEE"""
+	def __init__(self):
+		super(MBEEAuth, self).__init__()
+		self.authenticate()
+
+	def authenticate(self):
+		print("Please enter your username and password")
+		self.username = input("Username: ")
+		password = getpass("Password: ")
+		self.auth = (self.username, password)
+
+	def getUsername(self):
+		return self.username
 
 class MBEESession(requests.Session):
 	"""This is a requests Session object built for connecting to MBEE"""
@@ -11,42 +27,18 @@ class MBEESession(requests.Session):
 		print("Running with Python " + str(sys.version_info.major) 
 			+ "." + str(sys.version_info.minor) + "\n")
 		# establish the baseURL for this (don't need port all the time, always host)
-		self.baseURL = host + ":" + port if port else host
-		# store the user auth for use in the get and post functions
-		self.authenticate()
+		self.baseURL = "http://" + host + (":" + port if port else None) + "/alfresco/service"
+		# store custom authentication for use in the get and post functions
+		self.auth = MBEEAuth()
 
-	def authenticate(self):
-		print("Please enter your username and password")
-		username = input("Username: ")
-		password = getpass("Password: ")
-		self.auth = (username, password)
+	def connect(self):
+		print("Connecting " + self.getUser() + " to " + self.getBaseURL())
 
 	def getBaseURL(self):
 		return self.baseURL
 
-# class Master(object):
-# 	"""This is the master class that holds the connection to the MBEE server"""
-# 	def __init__(self, host, port):
-# 		self.host = host
-# 		self.port = port
-# 		print("Running with Python " + str(sys.version_info.major) 
-# 			+ "." + str(sys.version_info.minor) + "\n")
-# 		self.sesh = requests.Session()
-# 		self.sesh.auth = self.authenticate()
-# 		print("did it: " + str(self.sesh.auth))
-# 		self.connect()
-
-# 	def authenticate(self):
-# 		print("Please enter username and password")
-# 		username = input("Username: ")
-# 		password = getpass.getpass("Password: ")
-# 		return (username, password)
-
-# 	def connect(self):
-# 		print("Connecting user " + self.sesh.auth[0] + " to database.")
-
-# 	def getBaseURL(self):
-# 		return "http://" + self.host + ":" + self.port + "/alfresco/service"
+	def getUser(self):
+		return self.auth.getUsername()
 
 class Talker(MBEESession):
 	"""This is the class that combines read and write to database methods"""
@@ -70,8 +62,6 @@ class Talker(MBEESession):
 
 	def postElementFromFile(self, idd, filename):
 		print(filename)
-
-
 
 
 
