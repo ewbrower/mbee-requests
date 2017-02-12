@@ -10,6 +10,10 @@ class MBEEAuth(AuthBase):
 		super(MBEEAuth, self).__init__()
 		self.authenticate()
 
+	def __call__(self, r):
+		r.auth = self.auth
+		return r
+
 	def authenticate(self):
 		print("Please enter your username and password")
 		self.username = input("Username: ")
@@ -27,18 +31,21 @@ class MBEESession(requests.Session):
 		print("Running with Python " + str(sys.version_info.major) 
 			+ "." + str(sys.version_info.minor) + "\n")
 		# establish the baseURL for this (don't need port all the time, always host)
-		self.baseURL = "http://" + host + (":" + port if port else None) + "/alfresco/service"
+		self.baseURL = "http://" + host + (":" + port if port else "") + "/alfresco/service"
 		# store custom authentication for use in the get and post functions
 		self.auth = MBEEAuth()
 
 	def connect(self):
 		print("Connecting " + self.getUser() + " to " + self.getBaseURL())
 
+	def getAuth(self):
+		return self.auth
+
 	def getBaseURL(self):
 		return self.baseURL
 
-	def getUser(self):
-		return self.auth.getUsername()
+	def get(url, **kwargs):
+		print("getting " + url)
 
 class Talker(MBEESession):
 	"""This is the class that combines read and write to database methods"""
@@ -50,11 +57,12 @@ class Talker(MBEESession):
 			+ "\nsaveElementById(site, id, file)\npostElementFromFile(id, file)")
 
 	def getElementById(self, site, idd):
-		# print(idd)
 		# construct URL
 		# use requests to send it over
 		url = self.getBaseURL() + "/workspaces/master/sites/" + site + "/elements/" + idd
-		return url
+		resp = self.get(url, auth = self.getAuth())
+		response = "{this}"
+		return response
 
 	def saveElementById(self, site, idd, filename):
 		url = self.getElementById(site, idd)
