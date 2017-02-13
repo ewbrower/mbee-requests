@@ -1,0 +1,49 @@
+{
+    "elements": [
+        {
+            "siteCharacterizationId": "restful",
+            "qualifiedId": "/restful/restful_no_project/holding_bin_restful_no_project/YY_2017_restful_no_project/MM_1_YY_2017_restful_no_project/DD_12_MM_1_YY_2017_restful_no_project/HH_20_DD_12_MM_1_YY_2017_restful_no_project/MMS_1486950811965_07307863-33d9-455d-81db-480dc27021f7",
+            "nodeRefId": "workspace://SpacesStore/4f151e03-1a6a-48ee-880c-814ff00f6988",
+            "versionedRefId": "versionStore://version2Store/b561aa89-e5bf-4065-a3a2-5def26da5df8",
+            "qualifiedName": "/restful/restful_no_project/holding_bin/YY_2017/MM_1/DD_12/HH_20/MBEE-Requests",
+            "sysmlid": "MMS_1486950811965_07307863-33d9-455d-81db-480dc27021f7",
+            "isMetatype": false,
+            "editable": true,
+            "creator": "tmperic",
+            "modified": "2017-02-12T22:25:45.366-0500",
+            "modifier": "tmperic",
+            "created": "Sun Feb 12 20:53:31 EST 2017",
+            "name": "MBEE-Requests",
+            "owner": "HH_20_DD_12_MM_1_YY_2017_restful_no_project",
+            "documentation": "<p>Sample </p>",
+            "read": "2017-02-12T22:25:46.957-0500",
+            "appliedMetatypes": [
+                "_17_0_2_3_87b0275_1371477871400_792964_43374",
+                "_9_0_62a020a_1105704885343_144138_7929"
+            ],
+            "specialization": {
+                "view2view": [
+                    {
+                        "id": "MMS_1486950811965_07307863-33d9-455d-81db-480dc27021f7",
+                        "childrenViews": []
+                    }
+                ],
+                "childrenViews": [],
+                "displayedElements": [
+                    "MMS_1486950811965_07307863-33d9-455d-81db-480dc27021f7"
+                ],
+                "contents": {
+                    "type": "Expression",
+                    "operand": [
+                        {
+                            "instance": "MMS_1486950811966_c1e905b8-e652-4842-b2b5-ae1dc89b4a77",
+                            "type": "InstanceValue"
+                        }
+                    ]
+                },
+                "allowedElements": [],
+                "type": "Product"
+            }
+        }
+    ]
+}
