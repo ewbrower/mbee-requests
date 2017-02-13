@@ -1,44 +1,61 @@
-import master
+import requests
 import sys
 import json
+from getpass import getpass
 
-class Reader():
-	"""This thing parses json"""
+class MBEESession(requests.Session):
+	'''This is a requests Session object built for connecting to MBEE'''
 
-	def readFile(self, file):
-		print("Opening file: " + str(file))
-		js = open(file, 'r')
+	def __init__(self, host, port = None):
+		super(MBEESession, self).__init__()
+		print('Running with Python ' + str(sys.version_info.major) 
+			+ '.' + str(sys.version_info.minor) + '\n')
+		# establish the baseURL for this (don't need port all the time, always host)
+		self.baseURL = 'http://' + host + (':' + port if port else '') + '/alfresco/service'
+		# establish authentication for the session
+		print('Please enter your username and password')
+		username = input('Username: ')
+		self.auth = requests.auth.HTTPBasicAuth(username, getpass('Password: '))
+		self.headers.update({'content-type' : 'application/json'})
 
-		jsonStr = ""
-		for line in js.readlines():
-			jsonStr+=line.strip()
+	def getBaseURL(self):
+		return self.baseURL
 
-		return self.readString(jsonStr)
+class Talker(MBEESession):
+	'''This is the class that combines read and write to database methods'''
+	def __init__(self, host, port= None):
+		super(Talker, self).__init__(host, port)
 
-	def readString(self, string):
-		data = json.loads(string)
-		return data
+	def help(self):
+		print('Here are the functions available:\ngetElementById(site, id)'
+			+ '\nsaveElementById(site, id, file)\npostElementFromFile(id, file)')
 
-class Parser(object):
-	"""This thing parses MBEE Elements"""
+	def getElementById(self, site, idd):
+		# construct URL use requests to send it over
+		url = self.getBaseURL() + '/workspaces/master/sites/' + site + '/elements/' + idd
+		response = self.get(url)
+		return response.json()
 
-	def __init__(self, arg):
-		self.element = arg
+	def saveElementById(self, site, idd, filename):
+		data = self.getElementById(site, idd)
+		with open(filename, 'w') as outFile:
+			json.dump(data, outFile, indent=4)
 
-	def getSlotValue(self):
-		return self.element["specialization"]["value"][0]["double"]
-		
+	def postElementsFromFile(self, filename, idd = None):
+		# this function isn't going to work for more than one result
+		with open(filename, 'r') as inputFile:
+			data = json.load(inputFile)
+		site = self.findElementSite(data['elements'][0])
+		return self.postElementById(site, data)
 
-if __name__ == '__main__':
-	m = master.Master("host","port")
+	def postElementById(self, site, payload):
+		url = self.getBaseURL() + '/workspaces/master/sites/' + site + '/elements'
+		response = self.post(url, data=json.dumps(payload))
+		return response
 
-	print("Running on Python " + str(sys.version_info.major) 
-		+ "." + str(sys.version_info.minor))
-	reader = Reader()
-	jsonData = reader.readFile("sample.json")
-	element = jsonData["elements"][0]
+	def findElementSite(self, jData):
+		site = jData['siteCharacterizationId']
+		return site
 
-	parser = Parser(element)
-	slotValue = parser.getSlotValue()
-	print(slotValue)
+
 
