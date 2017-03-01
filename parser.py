@@ -2,6 +2,7 @@ import requests
 import sys
 import json
 from talker import Talker
+from IPython.display import HTML, display
 
 class Parser(object):
 	"""This class makes many get requests and parses the data"""
@@ -43,9 +44,26 @@ class Parser(object):
 		sortedNums = sorted(numValueList, key = lambda num: num.iD)
 
 		place = 0
+
+		# for title in sortedTitles:
+		# 	print(title.title, ' - ', sortedNums[place].num, ' - ', sortedNums[place + 1].num)
+		# 	place = place + 2
+
+		tableHTML = "<table>"
+		col = '</td><td>'
 		for title in sortedTitles:
-		    print(title.title, ' - ', sortedNums[place].num, ' - ', sortedNums[place + 1].num)
-		    place = place + 2
+			tableHTML+='<tr><td>' + title.title + col + str(sortedNums[place].num) + col 
+				+ str(sortedNums[place + 1].num) + '</td></tr>'
+		tableHTML += '</table>'
+		display(HTML(tableHTML))
+
+
+		# display(HTML(
+		# 	'<table><tr>{}</tr></table>'.format(
+		# 		'</tr><tr>'.join(
+		# 			'<td>{}</td>'.format('</td><td>'.join(str(_) for _ in title)) for title in sortedTitles)
+		# 		)
+		# 	))
 
 class Value(object):
     def __init__(self, arg):
