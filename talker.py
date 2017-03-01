@@ -33,7 +33,7 @@ class Talker(MBEESession):
 	def getElementById(self, site, idd):
 		# construct URL use requests to send it over
 		url = self.getBaseURL() + '/workspaces/master/sites/' + site + '/elements/' + idd
-		print(url)
+		# print(url)
 		response = self.get(url)
 		return response.json()
 
