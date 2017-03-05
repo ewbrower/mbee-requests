@@ -7,6 +7,7 @@ class MBEESession(requests.Session):
 	'''This is a requests Session object built for connecting to MBEE'''
 
 	def __init__(self, host, port = None):
+		# TODO: dd a verification to login
 		super(MBEESession, self).__init__()
 		print('Running with Python ' + str(sys.version_info.major) 
 			+ '.' + str(sys.version_info.minor) + '\n')

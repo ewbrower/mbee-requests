@@ -3,6 +3,7 @@ import sys
 import json
 from talker import Talker
 from IPython.display import HTML, display
+from ipywidgets import *
 
 class Parser(object):
 	"""This class makes many get requests and parses the data"""
@@ -14,7 +15,15 @@ class Parser(object):
 	def getElement(self, idd):
 		return self.talker.getElementById(self.site, idd)
 
-	def getTable(self, idd):
+	def getTable(self, idd, editable=False):
+		# fix this once we find the things that are in common here
+		if editable:
+			self.getEditableTable(idd)
+		else:
+			self.getUneditableTable(idd)
+
+
+	def getUneditableTable(self, idd):
 		# tableJSON = self.talker.getElementById(self.site, idd)
 		table = self.talker.getElementById(self.site, idd)
 		table = json.dumps(table)
@@ -56,6 +65,20 @@ class Parser(object):
 			place = place + 2
 		tableHTML += '</table>'
 		display(HTML(tableHTML))
+
+	def getEditableTable(self, idd):
+		# press that button to update the MMS
+		# saves the updated values in the table to json
+		# sends the json back to server
+		caption = Label('editable table here', disabled=True)
+
+		button = widgets.Button(description="Update MMS", layout=Layout(position='bottom'))
+		button.on_click(self.on_button_clicked)
+
+		display(caption, button)
+
+	def on_button_clicked(self, b):
+		print("MMS Updated")
 
 class Value(object):
     def __init__(self, arg):
