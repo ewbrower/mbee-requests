@@ -67,9 +67,6 @@ class Parser(object):
 		display(HTML(tableHTML))
 
 	def getEditableTable(self, idd):
-		# press that button to update the MMS
-		# saves the updated values in the table to json
-		# sends the json back to server
 		caption = Label('editable table here', disabled=True)
 
 		button = widgets.Button(description="Update MMS", layout=Layout(position='bottom'))
@@ -78,14 +75,19 @@ class Parser(object):
 		display(caption, button)
 
 	def on_button_clicked(self, b):
+		# save the updated values in the table to a json object
+		# sends the json back to server
 		print("MMS Updated")
 
+
 class Value(object):
-    def __init__(self, arg):
-        self.value = arg
+    def __init__(self, value):
+        self.value = value
     #this may not be fair to assume that lengths will always be 3 or 5, but worked in this case
+    # def isNumeric(self):
+    #     return len(self.value["elements"][0]["specialization"]["type"]) in ["LiteralReal", "LiteralInteger"]
     def isNumeric(self):
-        return len(self.value["elements"][0]["specialization"]) > 3
+        return self.value["elements"][0]["specialization"]["type"] in ["LiteralReal", "LiteralInteger"]
     def isName(self):
         return len(self.value["elements"][0]["specialization"]) < 5
     #gets name or number depending on type based on above assumptions

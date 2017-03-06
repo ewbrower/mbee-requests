@@ -9,15 +9,18 @@ class MBEESession(requests.Session):
 	def __init__(self, host, port = None):
 		# TODO: dd a verification to login
 		super(MBEESession, self).__init__()
-		print('Running with Python ' + str(sys.version_info.major) 
-			+ '.' + str(sys.version_info.minor) + '\n')
+		# print('Running with Python ' + str(sys.version_info.major) 
+			# + '.' + str(sys.version_info.minor) + '\n')
 		# establish the baseURL for this (don't need port all the time, always host)
 		self.baseURL = 'http://' + host + (':' + port if port else '') + '/alfresco/service'
+		self.headers.update({'content-type' : 'application/json'})
+		self.authenticate()
+
+	def authenticate(self):
 		# establish authentication for the session
 		print('Please enter your username and password')
 		username = input('Username: ')
 		self.auth = requests.auth.HTTPBasicAuth(username, getpass('Password: '))
-		self.headers.update({'content-type' : 'application/json'})
 
 	def getBaseURL(self):
 		return self.baseURL
