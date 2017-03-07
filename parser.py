@@ -47,22 +47,6 @@ class Parser(object):
 		rows.pop(0)
 		rowList = []
 		for row in rows:
-<<<<<<< HEAD
-		    columnList = []
-		    columns = row.split('"source":"')
-		    columns.pop(0)
-		    for column in columns:
-		        itemID = column.split('"')[0]
-		        variable = p.getElementById("mbppguidex", itemID)
-		        variable = json.dumps(variable)
-		        variable  = json.loads(variable)
-		        if len(variable["elements"][0]["specialization"]) > 3:
-		            columnList.append(variable["elements"][0]["specialization"]["value"][0]["double"])
-		        else:
-		            columnList.append(variable["elements"][0]["name"])
-		    rowList.append(columnList)
-			print(tabulate(rowList, headers = headerList))
-=======
 			columnList = []
 			columns = row.split('"source":"')
 			columns.pop(0)
@@ -77,8 +61,6 @@ class Parser(object):
 					columnList.append(variable["elements"][0]["name"])
 			rowList.append(columnList)
 		print(tabulate(rowList, headers=headerList))
-
->>>>>>> 2e0acd0e36c18f5da7fe230a8fff89e284d7467b
 
 	def getEditableTable(self, idd):
 		caption = Label('editable table here', disabled=True)
