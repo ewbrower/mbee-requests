@@ -4,6 +4,7 @@ import json
 from talker import Talker
 from IPython.display import HTML, display
 from ipywidgets import *
+from tabulate import tabulate
 
 class Parser(object):
 	"""This class makes many get requests and parses the data"""
@@ -29,7 +30,7 @@ class Parser(object):
 		#D3 - "_18_0_5_3a40149_1486497151977_210118_16085"
 		#Sample Data Table - "_18_0_5_3a40149_1486149200614_128977_15535"
 		tableAddress = "_18_0_5_3a40149_1487976881089_349552_19724"
-		table = p.getElementById("mbppguidex", tableAddress)
+		table = self.talker.getElementById("mbppguidex", tableAddress)
 		table = json.dumps(table)
 		data = json.loads(table)
 
@@ -46,6 +47,7 @@ class Parser(object):
 		rows.pop(0)
 		rowList = []
 		for row in rows:
+<<<<<<< HEAD
 		    columnList = []
 		    columns = row.split('"source":"')
 		    columns.pop(0)
@@ -60,6 +62,23 @@ class Parser(object):
 		            columnList.append(variable["elements"][0]["name"])
 		    rowList.append(columnList)
 			print(tabulate(rowList, headers = headerList))
+=======
+			columnList = []
+			columns = row.split('"source":"')
+			columns.pop(0)
+			for column in columns:
+				itemID = column.split('"')[0]
+				variable = self.talker.getElementById("mbppguidex", itemID)
+				variable = json.dumps(variable)
+				variable  = json.loads(variable)
+				if len(variable["elements"][0]["specialization"]) > 3:
+					columnList.append(variable["elements"][0]["specialization"]["value"][0]["double"])
+				else:
+					columnList.append(variable["elements"][0]["name"])
+			rowList.append(columnList)
+		print(tabulate(rowList, headers=headerList))
+
+>>>>>>> 2e0acd0e36c18f5da7fe230a8fff89e284d7467b
 
 	def getEditableTable(self, idd):
 		caption = Label('editable table here', disabled=True)
