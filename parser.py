@@ -24,47 +24,41 @@ class Parser(object):
 
 
 	def getUneditableTable(self, idd):
-		# tableJSON = self.talker.getElementById(self.site, idd)
-		table = self.talker.getElementById(self.site, idd)
+		#ETO Analysis - "_18_0_5_3a40149_1487976881089_349552_19724"
+		#PAF Structual Capability - "_18_0_5_3a40149_1487274522343_479963_15422"
+		#D3 - "_18_0_5_3a40149_1486497151977_210118_16085"
+		#Sample Data Table - "_18_0_5_3a40149_1486149200614_128977_15535"
+		tableAddress = "_18_0_5_3a40149_1487976881089_349552_19724"
+		table = p.getElementById("mbppguidex", tableAddress)
 		table = json.dumps(table)
 		data = json.loads(table)
 
-		#categories = data["elements"][0]["documentation"][50]
-		#this is where I would print category names but right now it's just one long string
-		#so going to find a more efficient means of parsing
+		instanceSpecifications = data["elements"][0]["specialization"]["instanceSpecificationSpecification"]["string"]
+		titles, body = instanceSpecifications.split("body", 1)
+		headers = titles.split("<p>")
+		headerList = []
+		for header in headers:
+		    headerList.append(header.split("<\/p>")[0])
+		headerList.pop(0)
+		#print(headerList)
 
-		itemArray = data["elements"][0]["specialization"]["displayedElements"]
-		itemArray.pop() #because the last element is a reference to the table itself
-
-		numValueList = []
-		titleValueList = []
-		for item in itemArray:
-		    value = self.talker.getElementById(self.site, item)
-		    value = json.dumps(value)
-		    valueData = json.loads(value)
-		    valueData1 = Value(valueData)#this is jenk and inefficient but will fix later
-		    if valueData1.isNumeric():
-		        numValueList.append(Number(valueData))
-		    else:
-		        titleValueList.append(Title(valueData))
-
-		#this is where it gets very hard coded to this case
-		sortedTitles = sorted(titleValueList, key = lambda title: title.iD)
-		sortedNums = sorted(numValueList, key = lambda num: num.iD)
-
-		# place = 0
-		# for title in sortedTitles:
-		# 	print(title.title, ' - ', sortedNums[place].num, ' - ', sortedNums[place + 1].num)
-		# 	place = place + 2
-
-		place = 0
-		tableHTML = "<table>"
-		col = '</td><td>'
-		for title in sortedTitles:
-			tableHTML+='<tr><td>' + title.title + col + str(sortedNums[place].num) + col + str(sortedNums[place + 1].num) + '</td></tr>'
-			place = place + 2
-		tableHTML += '</table>'
-		display(HTML(tableHTML))
+		rows = body.split("name")
+		rows.pop(0)
+		rowList = []
+		for row in rows:
+		    columnList = []
+		    columns = row.split('"source":"')
+		    columns.pop(0)
+		    for column in columns:
+		        itemID = column.split('"')[0]
+		        variable = p.getElementById("mbppguidex", itemID)
+		        variable = json.dumps(variable)
+		        variable  = json.loads(variable)
+		        if len(variable["elements"][0]["specialization"]) > 3:
+		            columnList.append(variable["elements"][0]["specialization"]["value"][0]["double"])
+		        else:
+		            columnList.append(variable["elements"][0]["name"])
+		    rowList.append(columnList)
 
 	def getEditableTable(self, idd):
 		caption = Label('editable table here', disabled=True)
