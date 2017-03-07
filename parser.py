@@ -4,6 +4,7 @@ import json
 from talker import Talker
 from IPython.display import HTML, display
 from ipywidgets import *
+from tabulate import tabulate
 
 class Parser(object):
 	"""This class makes many get requests and parses the data"""
@@ -58,7 +59,8 @@ class Parser(object):
 					columnList.append(variable["elements"][0]["specialization"]["value"][0]["double"])
 				else:
 					columnList.append(variable["elements"][0]["name"])
-	    	rowList.append(columnList)
+			rowList.append(columnList)
+		print(tabulate(rowList, headers=headerList))
 
 
 	def getEditableTable(self, idd):
