@@ -59,6 +59,7 @@ class Parser(object):
 		        else:
 		            columnList.append(variable["elements"][0]["name"])
 		    rowList.append(columnList)
+			print(tabulate(rowList, headers = headerList))
 
 	def getEditableTable(self, idd):
 		caption = Label('editable table here', disabled=True)
