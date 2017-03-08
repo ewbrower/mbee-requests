@@ -55,7 +55,7 @@ class Parser(object):
 				variable = self.talker.getElementById("mbppguidex", itemID)
 				variable = json.dumps(variable)
 				variable  = json.loads(variable)
-				if len(variable["elements"][0]["specialization"]) > 3:
+				if "value" in variable["elements"][0]["specialization"]:
 					columnList.append(variable["elements"][0]["specialization"]["value"][0]["double"])
 				else:
 					columnList.append(variable["elements"][0]["name"])
