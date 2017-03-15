@@ -1,6 +1,8 @@
 import requests
 import sys
 import json
+import openpyxl
+import re
 from talker import Talker
 from IPython.display import HTML, display
 from ipywidgets import *
@@ -74,6 +76,74 @@ class Parser(object):
 		# save the updated values in the table to a json object
 		# sends the json back to server
 		print("MMS Updated")
+	def updateTableExcel(self, idd):
+		table = self.talker.getElementById("mbppguidex", "_18_0_5_3a40149_1487274522343_479963_15422")
+		table = json.dumps(table)
+		data = json.loads(table)
+
+		fileName = "paf_capability_1.xlsx"
+		sheetName = input('\nSheet Name: ')
+		tableStart = input('Cell ID of start of Table: ')
+		excelTable = excelParser(fileName, sheetName, tableStart)
+
+		instanceSpecifications = data["elements"][0]["specialization"]["instanceSpecificationSpecification"]["string"]
+		titles, body = instanceSpecifications.split("body", 1)
+		headers = titles.split("<p>")
+		headerList = []
+		for header in headers:
+		    headerList.append(header.split("<\/p>")[0])
+		headerList.pop(0)
+
+		rows = body.split("name")
+		rows.pop(0)
+		rowList = []
+		rowPlace = 1
+
+		for row in rows:
+		    columnList = []
+		    columnPlace = 0
+		    columns = row.split('"source":"')
+		    columns.pop(0)
+		    for column in columns:
+		        itemID = column.split('"')[0]
+		        variable = self.talker.getElementById("mbppguidex", itemID)
+		        variable = json.dumps(variable)
+		        variable  = json.loads(variable)
+		        if "value" in variable["elements"][0]["specialization"]:
+		            if variable["elements"][0]["specialization"]["value"][0]["double"] != excelTable[rowPlace][columnPlace]:
+						#Number of floating points for equivalence can be further clarified
+		                variable["elements"][0]["specialization"]["value"][0]["double"] = "%.5f" % excelTable[rowPlace][columnPlace]
+		                self.talker.postElementById("mbppguidex", variable)
+		        else:
+		            if variable["elements"][0]["name"] != excelTable[rowPlace][columnPlace]:
+		                variable["elements"][0]["name"] = excelTable[rowPlace][columnPlace]
+		                self.talker.postElementById("mbppguidex", variable)
+		        columnPlace = columnPlace + 1
+		    rowPlace = rowPlace + 1
+
+	def excelParser(fileName, sheetName, tableStart):
+	    wb = openpyxl.load_workbook(fileName, data_only=True)
+	    sheet = wb.get_sheet_by_name(sheetName)
+	    tableStart = tableStart
+	    column = ord(re.split('(\d+)', tableStart)[0]) - 64
+	    row = int(re.split('(\d+)', tableStart)[1])
+	    rowCheck = row
+	    columnCheck = column
+	    columns = 0
+	    rows = 0
+	    rowList = []
+	    while sheet.cell(row = rowCheck, column = column).value != None or rowCheck == row:
+	        rowCheck = rowCheck + 1
+	        rows = rows + 1
+	    while sheet.cell(row = row, column = columnCheck).value != None or columnCheck == column:
+	        columns = columns + 1
+	        columnCheck = columnCheck + 1
+	    for xrow in range(0, rows):
+	        columnList = []
+	        for ycolumn in range(0, columns):
+	            columnList.append(sheet.cell(row = row + xrow, column = column + ycolumn).value)
+	        rowList.append(columnList)
+	    return rowList
 
 
 class Value(object):
